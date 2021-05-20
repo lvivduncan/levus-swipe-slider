@@ -1,113 +1,127 @@
+// 20-05-2021
+{
+    // left button
+    const left = document.createElement('div');
+    left.setAttribute('id', 'slide-left');
 
+    // right button
+    const right = document.createElement('div');
+    right.setAttribute('id', 'slide-right');
 
-// left button
-const left = document.createElement('div');
-left.setAttribute('id', 'slide-left');
+    // box with slides
+    const slides = document.getElementById('slides');
 
-// right button
-const right = document.createElement('div');
-right.setAttribute('id', 'slide-right');
+    // wrapper
+    const levusSwipeSlider = document.getElementById('levus-swipe-slider');
 
-// box with slides
-const slides = document.getElementById('slides');
+    // slides 
+    let list = document.querySelectorAll('.slide');
 
-// wrapper
-const levusSwipeSlider = document.getElementById('levus-swipe-slider');
-
-// slides 
-let list = document.querySelectorAll('.slide');
-
-if(list.length > 1) {
-    
-    // add buttons
-    levusSwipeSlider.append(left, right);
-
-    for (let index = 0; index < list.length; index++) {
+    if(list.length > 1) {
         
-        // clone slides
-        document.getElementById('slides').append(list[index].cloneNode(true));
+        // add buttons
+        levusSwipeSlider.append(left, right);
+
+        for (let index = 0; index < list.length; index++) {
+            
+            // clone slides
+            document.getElementById('slides').append(list[index].cloneNode(true));
+        }
+
+        // shift -100%
+        slides.style.left = '-100%';
     }
 
-    // shift -100%
-    slides.style.left = '-100%';
-}
+    /**
+     * click
+     */
 
-/**
- * click
- */
+    // left click
+    document.getElementById('slide-left') && document.getElementById('slide-left').addEventListener('click', leftScroll);
 
-// left click
-document.getElementById('slide-left') && document.getElementById('slide-left').addEventListener('click', leftScroll);
+    // right click
+    document.getElementById('slide-right') && document.getElementById('slide-right').addEventListener('click', rightScroll);
 
-// right click
-document.getElementById('slide-right') && document.getElementById('slide-right').addEventListener('click', rightScroll);
+    /**
+     * touch
+     */
 
+    let startX = null,
+        moveX = 0,
+        resultX = 0;
 
-/**
- * touch
- */
+    list = document.querySelectorAll('.slide');
 
-let startX = null,
-    moveX = 0,
-    resultX = 0;
+    if(list.length > 1){    
+        list.forEach(item => {
+        
+            // touch
+            item.addEventListener('touchstart', e => touchStart(e), false);
+            item.addEventListener('touchmove', e => touchMove(e), false);
+            item.addEventListener('touchend', touchEnd, false);
 
-list = document.querySelectorAll('.slide');
+            // click
+            item.addEventListener('mousedown', e => touchStart(e), false);
+            item.addEventListener('mousemove', e => touchMove(e), false);
+            item.addEventListener('mouseup', touchEnd, false);
+            // item.addEventListener('mouseleave', touchEnd, false);
 
-list.forEach(item => {
+        });
+    }
 
-    item.addEventListener('touchstart', e => {
+    function touchStart(e){
 
-        startX = e.targetTouches[0].clientX;
+        // mobile/deskop check
+        if(e.type.includes('mouse')){
+            startX = e.pageX;
+        } else {
+            startX = e.targetTouches[0].clientX;
+        }
 
-    }, false);
+    }
 
-    item.addEventListener('touchmove', e => {
-
+    function touchMove(e){
         if(!startX) return false;        
 
-        moveX = e.targetTouches[0].clientX;
+        // mobile/deskop check
+        if(e.type.includes('mouse')){
+            moveX = e.pageX;
+        } else {
+            moveX = e.targetTouches[0].clientX;
+        }
 
         resultX = moveX - startX;
+    }
 
-    }, false);
+    function touchEnd(){
+        if(resultX > 0) leftScroll();
+        else rightScroll();
+    }
 
-    item.addEventListener('touchend', e => {
-        if(resultX > 0){
-            
-            leftScroll();
+    function leftScroll(){
+        const last = slides.lastElementChild;
+        slides.prepend(last);
 
-        } else {
+        slides.style.transition = 'none';
+        slides.classList.add('to-right');
 
-            rightScroll();
-            
-        }        
-    });
-});
-
-
-function leftScroll(){
-    const last = slides.lastElementChild;
-    slides.prepend(last);
-
-    slides.style.transition = 'none';
-    slides.classList.add('to-right');
-
-    setTimeout(() => {
-        slides.classList.remove('to-right');
-        slides.style.transition = '.5s';
-    }, 50);
-}
+        setTimeout(() => {
+            slides.classList.remove('to-right');
+            slides.style.transition = '.5s';
+        }, 50);
+    }
 
 
-function rightScroll(){
-    const first = slides.firstElementChild;
-    slides.append(first);
+    function rightScroll(){
+        const first = slides.firstElementChild;
+        slides.append(first);
 
-    slides.style.transition = 'none';
-    slides.classList.add('to-left');
-    
-    setTimeout(() => {
-        slides.classList.remove('to-left');
-        slides.style.transition = '.5s';
-    }, 50);
+        slides.style.transition = 'none';
+        slides.classList.add('to-left');
+        
+        setTimeout(() => {
+            slides.classList.remove('to-left');
+            slides.style.transition = '.5s';
+        }, 50);
+    }
 }
