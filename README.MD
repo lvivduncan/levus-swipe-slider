@@ -1,3 +1,4 @@
-click and swipe slider
+Свайп слайдер (десктоп і мобільний)
 
-[demo]{https://lvivduncan.github.io/levus-swipe-slider/}
+https://lvivduncan.github.io/levus-swipe-slider/
+
