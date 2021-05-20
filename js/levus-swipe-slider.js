@@ -43,7 +43,7 @@
     document.getElementById('slide-right') && document.getElementById('slide-right').addEventListener('click', rightScroll);
 
     /**
-     * touch
+     * swipe
      */
 
     let startX = null,
@@ -64,7 +64,6 @@
             item.addEventListener('mousedown', e => touchStart(e), false);
             item.addEventListener('mousemove', e => touchMove(e), false);
             item.addEventListener('mouseup', touchEnd, false);
-            // item.addEventListener('mouseleave', touchEnd, false);
 
         });
     }
@@ -110,7 +109,6 @@
             slides.style.transition = '.5s';
         }, 50);
     }
-
 
     function rightScroll(){
         const first = slides.firstElementChild;
