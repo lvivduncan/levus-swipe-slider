@@ -75,3 +75,19 @@
 .to-right {
     transform: translateX(-100%);
 }
+
+/* for test */
+.slide-wrap{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+}
+
+.slide-wrap p{
+    margin: 20px 0;
+    padding: 0 100px;
+    line-height: 1.5;
+}
+
+/* for test */

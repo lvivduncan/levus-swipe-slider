@@ -65,6 +65,17 @@
             item.addEventListener('mousemove', e => touchMove(e), false);
             item.addEventListener('mouseup', touchEnd, false);
 
+            // image preventDefault
+            item.querySelectorAll('img').forEach(image => {
+                image.addEventListener('dragstart', e => e.preventDefault());
+            });
+
+/* 
+            item.addEventListener('pointerdown', e => touchStart(e), false);
+            item.addEventListener('pointermove', e => touchMove(e), false);
+            item.addEventListener('pointerup', touchEnd, false);
+*/
+
         });
     }
 
@@ -76,11 +87,11 @@
         } else {
             startX = e.targetTouches[0].clientX;
         }
-
+        
     }
 
     function touchMove(e){
-        if(!startX) return false;        
+        if(!startX) return false;
 
         // mobile/deskop check
         if(e.type.includes('mouse')){
@@ -123,5 +134,3 @@
         }, 50);
     }
 }
-
-// todo: rewrite touch and click event to pointer event
