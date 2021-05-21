@@ -123,3 +123,5 @@
         }, 50);
     }
 }
+
+// todo: rewrite touch and click event to pointer event
