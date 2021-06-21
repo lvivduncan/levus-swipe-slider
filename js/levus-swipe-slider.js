@@ -30,24 +30,79 @@
         levusSwipeSlider.append(left, right, nav);
 
         for (let index = 0; index < length; index++) {
+
+            // nav buttons
+            const span = document.createElement('span');
+            span.setAttribute('class', 'nav');
+            span.setAttribute('data-id', index);
             
             // clone slides
-            document.getElementById('slides').append(list[index].cloneNode(true));
+            slides.append(list[index].cloneNode(true));
+
+            // add buttons
+            nav.append(span);
+            
         }
 
         // shift -100%
         slides.style.left = '-100%';
+
+        // auto-scroll if the length is more than 1 element
+        // autoScroll();
+
     }
 
     /**
      * click
      */
 
+    const buttons = document.querySelectorAll('#levus-nav span');
+
+    // check bumber button
+    let flag = 1;
+
+    buttons.forEach(item => {
+
+        // lighting 2 slide 
+        // TODO: generate class active
+        buttons[1].classList.add('active');
+
+        item.addEventListener('click', function() {
+            const id = this.dataset.id;
+
+            buttons.forEach(item => item.classList.remove('active'));
+            this.classList.add('active');
+
+            if(flag > id){ // клікнуто зліва від активної кнопки
+
+                const length = flag - id;
+
+                for(let i = 0; i < length; i++){
+                    
+                    leftScroll();
+                }
+            } 
+            
+            if(flag < id){ // клікнуто справа від активної кнопки
+
+                const length = id - flag;
+
+                for(let i = 0; i < length; i++){
+                    
+                    rightScroll();
+                }
+            }
+
+            flag = id;
+        });
+    });
+
+
     // left click
-    document.getElementById('slide-left') && document.getElementById('slide-left').addEventListener('click', leftScroll);
+    left && left.addEventListener('click', leftScroll);
 
     // right click
-    document.getElementById('slide-right') && document.getElementById('slide-right').addEventListener('click', rightScroll);
+    right && right.addEventListener('click', rightScroll);
 
     /**
      * swipe
@@ -109,26 +164,29 @@
         else rightScroll();
     }
 
-    // autoscroll
+    // autoscroll 
+    // TODO: hover stop
     function autoScroll(){
-
-        const last = slides.lastElementChild;
-        slides.prepend(last);
 
         setInterval(() => {
 
+            const first = slides.firstElementChild;
+            slides.append(first);
+
             slides.style.transition = 'none';
-            slides.classList.add('to-right');
-    
+            slides.classList.add('to-left');
+            
             setTimeout(() => {
-                slides.classList.remove('to-right');
+                slides.classList.remove('to-left');
                 slides.style.transition = '.5s';
             }, 0);
 
         }, 4000);
+
     }
 
     function leftScroll(){
+
         const last = slides.lastElementChild;
         slides.prepend(last);
 
@@ -138,10 +196,12 @@
         setTimeout(() => {
             slides.classList.remove('to-right');
             slides.style.transition = '.5s';
-        }, 50);
+        }, 0);
+
     }
 
     function rightScroll(){
+
         const first = slides.firstElementChild;
         slides.append(first);
 
@@ -151,8 +211,8 @@
         setTimeout(() => {
             slides.classList.remove('to-left');
             slides.style.transition = '.5s';
-        }, 50);
+        }, 0);   
+
     }
 
-    autoScroll();
 }
