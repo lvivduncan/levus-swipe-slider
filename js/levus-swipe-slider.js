@@ -24,6 +24,11 @@
     const nav = document.createElement('div');
     nav.setAttribute('id', 'levus-nav');
 
+    // check number button
+    let flag = 1;
+
+    let buttons = '';
+
     if(length > 1) {
         
         // add buttons
@@ -33,7 +38,6 @@
 
             // nav buttons
             const span = document.createElement('span');
-            span.setAttribute('class', 'nav');
             span.setAttribute('data-id', index);
             
             // clone slides
@@ -47,56 +51,51 @@
         // shift -100%
         slides.style.left = '-100%';
 
+        buttons = document.querySelectorAll('#levus-nav span');
+
+        buttons.forEach(item => {
+    
+            // lighting 2 slide 
+            buttons[1].classList.add('active');
+    
+            item.addEventListener('click', function() {
+                const id = this.dataset.id;
+    
+                buttons.forEach(item => item.classList.remove('active'));
+                this.classList.add('active');
+    
+                if(flag > id){ // клікнуто зліва від активної кнопки
+    
+                    const length = flag - id;
+    
+                    for(let i = 0; i < length; i++){
+                        
+                        leftScroll();
+                    }
+                } 
+                
+                if(flag < id){ // клікнуто справа від активної кнопки
+    
+                    const length = id - flag;
+    
+                    for(let i = 0; i < length; i++){
+                        
+                        rightScroll();
+                    }
+                }
+    
+                flag = id;
+            });
+        });
+
         // auto-scroll if the length is more than 1 element
-        // autoScroll();
+        autoScroll();
 
     }
 
     /**
      * click
      */
-
-    const buttons = document.querySelectorAll('#levus-nav span');
-
-    // check bumber button
-    let flag = 1;
-
-    buttons.forEach(item => {
-
-        // lighting 2 slide 
-        // TODO: generate class active
-        buttons[1].classList.add('active');
-
-        item.addEventListener('click', function() {
-            const id = this.dataset.id;
-
-            buttons.forEach(item => item.classList.remove('active'));
-            this.classList.add('active');
-
-            if(flag > id){ // клікнуто зліва від активної кнопки
-
-                const length = flag - id;
-
-                for(let i = 0; i < length; i++){
-                    
-                    leftScroll();
-                }
-            } 
-            
-            if(flag < id){ // клікнуто справа від активної кнопки
-
-                const length = id - flag;
-
-                for(let i = 0; i < length; i++){
-                    
-                    rightScroll();
-                }
-            }
-
-            flag = id;
-        });
-    });
-
 
     // left click
     left && left.addEventListener('click', leftScroll);
@@ -170,6 +169,13 @@
 
         setInterval(() => {
 
+            // нарощуємо на 1
+            if(flag === length - 1){
+                flag = 0;
+            } else {
+                flag++;
+            }
+
             const first = slides.firstElementChild;
             slides.append(first);
 
@@ -181,11 +187,21 @@
                 slides.style.transition = '.5s';
             }, 0);
 
+            buttonLight();
+
         }, 4000);
+
 
     }
 
     function leftScroll(){
+
+        // якщо не менше кількості слайдів, то віднімаємо 1
+        if(flag === 0){
+            flag = length - 1;
+        } else {
+            flag--;
+        }
 
         const last = slides.lastElementChild;
         slides.prepend(last);
@@ -198,9 +214,18 @@
             slides.style.transition = '.5s';
         }, 0);
 
+        buttonLight();
+
     }
 
     function rightScroll(){
+
+        // нарощуємо на 1
+        if(flag === length - 1){
+            flag = 0;
+        } else {
+            flag++;
+        }
 
         const first = slides.firstElementChild;
         slides.append(first);
@@ -211,8 +236,16 @@
         setTimeout(() => {
             slides.classList.remove('to-left');
             slides.style.transition = '.5s';
-        }, 0);   
+        }, 0);
 
+        buttonLight();
+
+    }
+
+    // buttons highlights
+    function buttonLight(){
+        buttons.forEach(item => item.classList.remove('active'));
+        buttons[flag].classList.add('active');
     }
 
 }
