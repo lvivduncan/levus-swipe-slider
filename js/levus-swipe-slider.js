@@ -17,12 +17,19 @@
     // slides 
     let list = document.querySelectorAll('.slide');
 
-    if(list.length > 1) {
+    // quantity
+    const length = list.length;
+
+    // nav buttons
+    const nav = document.createElement('div');
+    nav.setAttribute('id', 'levus-nav');
+
+    if(length > 1) {
         
         // add buttons
-        levusSwipeSlider.append(left, right);
+        levusSwipeSlider.append(left, right, nav);
 
-        for (let index = 0; index < list.length; index++) {
+        for (let index = 0; index < length; index++) {
             
             // clone slides
             document.getElementById('slides').append(list[index].cloneNode(true));
@@ -70,12 +77,6 @@
                 image.addEventListener('dragstart', e => e.preventDefault());
             });
 
-/* 
-            item.addEventListener('pointerdown', e => touchStart(e), false);
-            item.addEventListener('pointermove', e => touchMove(e), false);
-            item.addEventListener('pointerup', touchEnd, false);
-*/
-
         });
     }
 
@@ -108,6 +109,25 @@
         else rightScroll();
     }
 
+    // autoscroll
+    function autoScroll(){
+
+        const last = slides.lastElementChild;
+        slides.prepend(last);
+
+        setInterval(() => {
+
+            slides.style.transition = 'none';
+            slides.classList.add('to-right');
+    
+            setTimeout(() => {
+                slides.classList.remove('to-right');
+                slides.style.transition = '.5s';
+            }, 0);
+
+        }, 4000);
+    }
+
     function leftScroll(){
         const last = slides.lastElementChild;
         slides.prepend(last);
@@ -133,4 +153,6 @@
             slides.style.transition = '.5s';
         }, 50);
     }
+
+    autoScroll();
 }
