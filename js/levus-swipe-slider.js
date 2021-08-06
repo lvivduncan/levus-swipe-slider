@@ -1,13 +1,5 @@
 // 20-05-2021 | 21-06-2021 6-08-2021 upgrade
 {
-    // left button
-    const left = document.createElement('div');
-    left.setAttribute('class', 'slide-left');
-
-    // right button
-    const right = document.createElement('div');
-    right.setAttribute('class', 'slide-right');
-
     // basic wrapper
     const levusSwipeSlider = document.querySelectorAll('.levus-swipe-slider');
 
@@ -22,6 +14,14 @@
 
         // quantity
         const length = list.length;
+
+        // left button
+        const left = document.createElement('div');
+        left.setAttribute('class', 'slide-left');
+
+        // right button
+        const right = document.createElement('div');
+        right.setAttribute('class', 'slide-right');
 
         // nav buttons
         const nav = document.createElement('div');
